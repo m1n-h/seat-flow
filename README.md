@@ -10,7 +10,7 @@
 
 ## 기술 스택
 
-- **Backend**: Vanilla PHP (PHP 8.x), PDO (`pdo_mysql`)
+- **Backend**: Vanilla PHP (PHP 8.5), PDO (`pdo_mysql`)
 - **Database**: MySQL (`seat_flow`)
 - **Frontend**: HTML, CSS, JavaScript
 - **Local Server**: PHP Built-in Server (`php -S localhost:8000 -t public`)
