@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 $pageTitle = $pageTitle ?? "SeatFlow - 실시간 좌석 예약 시스템";
+$currentUser = $_SESSION['user'] ?? null;
 ?>
 
 <!DOCTYPE html>
@@ -17,14 +18,26 @@ $pageTitle = $pageTitle ?? "SeatFlow - 실시간 좌석 예약 시스템";
   <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 
-<body>
-  <header class="site-header">
-    <div class="header-inner container">
-      <a href="/" class="brand">SeatFlow</a>
-      <nav class="nav">
-        <a href="/">룸/좌석 현황</a>
-        <!-- 이후 예약, 내 예약, 로그인 링크 추가 -->
-      </nav>
+<body class="bg-light text-dark d-flex flex-column min-vh-100">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="/">SeatFlow</a>
+
+      <div class="d-flex align-items-center gap-2">
+        <a class="nav-link text-light px-2 fw-bold small" href="/">룸/좌석 현황</a>
+
+        <?php if ($currentUser !== null): ?>
+          <span class="navbar-text text-light small px-2">
+            <strong><?= h((string)$currentUser['name']) ?></strong>님
+          </span>
+          <form method="post" action="/?action=logout" class="d-inline m-0">
+            <button type="submit" class="btn btn-outline-light btn-sm">로그아웃</button>
+          </form>
+        <?php else: ?>
+          <a class="btn btn-secondary btn-sm" href="/?page=login">로그인</a>
+          <a class="btn btn-primary btn-sm" href="/?page=register">회원가입</a>
+        <?php endif; ?>
+      </div>
     </div>
-  </header>
-  <main class="container">
+  </nav>
+  <main class="container my-4 flex-grow-1">

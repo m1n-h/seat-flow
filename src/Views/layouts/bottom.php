@@ -1,5 +1,5 @@
   </main>
-  <footer class="site-footer">
+  <footer class="site-footer border-top">
     <div class="container">
       <p>SeatFlow 예약 시스템</p>
     </div>
