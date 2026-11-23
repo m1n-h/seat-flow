@@ -28,9 +28,10 @@ class AuthController
   {
     $errorMessage = $_SESSION['flash_error'] ?? null;
     $successMessage = $_SESSION['flash_success'] ?? null;
+    $oldName = $_SESSION['old_name'] ?? '';
     $oldEmail = $_SESSION['old_email'] ?? '';
 
-    unset($_SESSION['flash_error'], $_SESSION['flash_success'], $_SESSION['old_email']);
+    unset($_SESSION['flash_error'], $_SESSION['flash_success'], $_SESSION['old_name'], $_SESSION['old_email']);
 
     require __DIR__ . '/../Views/auth/register.php';
   }
@@ -43,7 +44,7 @@ class AuthController
     $passwordConfirm = (string)($_POST['password_confirm'] ?? '');
 
     $_SESSION['old_name'] = $name;
-    $_SESSION['dol_email'] = $email;
+    $_SESSION['old_email'] = $email;
 
     if ($name === '' || mb_strlen($name) < 2) {
       $_SESSION['flash_error'] = "이름은 2자 이상 입력해 주세요.";
@@ -74,13 +75,13 @@ class AuthController
         $_SESSION['flash_error'] = "이미 가입된 이메일 입니다.";
         header('Location: /?page=register');
         exit;
-
-        $this->userRepository->create($name, $email, $password, 'user');
-        unset($_SESSION['old_name'], $_SESSION['old_email']);
-        $_SESSION['flash_success'] = "회원가입이 완료되었습니다. 로그인 해주세요.";
-        header('Location: /?page=login');
-        exit;
       }
+
+      $this->userRepository->create($name, $email, $password, 'user');
+      unset($_SESSION['old_name'], $_SESSION['old_email']);
+      $_SESSION['flash_success'] = "회원가입이 완료되었습니다. 로그인 해주세요.";
+      header('Location: /?page=login');
+      exit;
     } catch (Throwable $e) {
       $_SESSION['flash_error'] = "회원가입 처리 중 오류가 발생했습니다.";
       header('Location: /?page=register');

@@ -31,13 +31,13 @@ class UserRepository
 
     $stmt = $this->pdo->prepare(
       "INSERT INTO users (name, email, password, role, created_at)
-      VALUES (:name, :eamil, :password, :role, NOW())"
+      VALUES (:name, :email, :password, :role, NOW())"
     );
     $stmt->execute([
-      "name" => $name,
-      "email" => $email,
-      "password" => $hashedPassword,
-      "role" => $role
+      'name' => $name,
+      'email' => $email,
+      'password' => $hashedPassword,
+      'role' => $role,
     ]);
 
     return (int)$this->pdo->lastInsertId();
