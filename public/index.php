@@ -2,15 +2,12 @@
 
 declare(strict_types=1);
 
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
-
 session_start();
 
 require_once __DIR__ . "/../config/database.php";
 require_once __DIR__ . "/../src/Controllers/HomeController.php";
 require_once __DIR__ . "/../src/Controllers/AuthController.php";
+require_once __DIR__ . "/../src/Controllers/ReservationController.php";
 
 function h(?string $value): string
 {
@@ -19,6 +16,7 @@ function h(?string $value): string
 
 $pdo = getDbConnection();
 $authController = new AuthController($pdo);
+$reservationController = new ReservationController($pdo);
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $action = (string)($_GET['action'] ?? $_POST['action'] ?? '');
 $page = (string)($_GET['page'] ?? 'home');
@@ -28,6 +26,8 @@ if ($method === 'POST') {
     'register' => $authController->register(),
     'login' => $authController->login(),
     'logout' => $authController->logout(),
+    'reservation_create' => $reservationController->create(),
+    'reservation_cancel' => $reservationController->cancel(),
     default => (function () {
       http_response_code(404);
       echo '잘못된 요청입니다.';
@@ -39,6 +39,7 @@ if ($method === 'POST') {
 match ($page) {
   'login' => $authController->showLogin(),
   'register' => $authController->showRegister(),
+  'my_reservations' => $reservationController->myReservations(),
   'home' => (new HomeController($pdo))->index(),
   default => (function () {
     http_response_code(404);

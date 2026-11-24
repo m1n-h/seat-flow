@@ -27,6 +27,7 @@ $currentUser = $_SESSION['user'] ?? null;
         <a class="nav-link text-light px-2 fw-bold small" href="/">룸/좌석 현황</a>
 
         <?php if ($currentUser !== null): ?>
+          <a class="nav-link text-light px-2 fw-bold small" href="/?page=my_reservations">MY예약</a>
           <span class="navbar-text text-light small px-2">
             <strong><?= h((string)$currentUser['name']) ?></strong>님
           </span>
