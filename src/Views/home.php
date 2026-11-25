@@ -29,38 +29,41 @@ require_once __DIR__ . '/layouts/top.php';
 
   <div class="d-flex flex-column gap-3">
     <?php foreach ($roomWithSeats as $item):
-      $room = $item['room'];
-      $seats = $item['seats'];
+      $roomId = $item['room_id'];
+      $roomName = $item['room_name'];
+      $roomDescription = $item['room_description'];
+      $roomCapacity = $item['room_capacity'];
+      $seatId = $item['seat_id'];
+      $seatNumber = $item['seat_number'];
+      $seatStatus = $item['seat_status'];
+      $isInUseNow = $item['is_in_use_now'];
     ?>
       <div class="card shadow-sm border-0">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center mb-2">
-            <h2 class="h5 card-title fw-bold mb-0"><?= h($room['name']) ?></h2>
+            <h2 class="h5 card-title fw-bold mb-0"><?= h($roomName) ?></h2>
             <span class="badge rounded-pill text-bg-primary">
-              정원 <?= h((string)$room['capacity']) ?>명
+              정원 <?= h((string)$roomCapacity) ?>명
             </span>
           </div>
 
           <p class="card-text text-muted small mb-3">
-            <?= h($room['description'] ?? '') ?>
+            <?= h($roomDescription ?? '') ?>
           </p>
 
           <div class="d-flex flex-wrap gap-2">
-            <?php if (empty($seats)): ?>
+            <?php if (empty($seatId)): ?>
               <span class="text-muted small">등록된 좌석이 없습니다.</span>
-              <?php else:
-              foreach ($seats as $seat):
-                $status = (string)$seat['status'];
-                $info = $statusConfig[$status] ?? [
-                  'label' => $status,
-                  'badge' => 'text-bg-light border',
-                ];
-              ?>
-                <span class="badge <?= h($info['badge']) ?> px-3 py-2 fs-6 fw-normal">
-                  <?= h($seat['seat_number']) ?> · <?= h($info['label']) ?>
-                </span>
-            <?php endforeach;
-            endif; ?>
+            <?php else:
+              $info = $statusConfig[$seatStatus] ?? [
+                'label' => $statusLabels[$seatStatus],
+                'badge' => 'text-bg-light border',
+              ];
+            ?>
+              <span class="badge <?= h($info['badge']) ?> px-3 py-2 fs-6 fw-normal">
+                <?= h($seatNumber) ?> · <?= h($info['label']) ?>
+              </span>
+            <?php endif; ?>
           </div>
 
         </div>

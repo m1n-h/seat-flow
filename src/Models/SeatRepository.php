@@ -16,11 +16,22 @@ class SeatRepository
       r.capacity AS room_capacity,
       s.id AS seat_id,
       s.seat_number,
-      s.status AS seat_status
+      s.status AS seat_status,
+      CASE
+           WHEN LOWER(TRIM(s.status)) = 'active' AND active_res.seat_id IS NOT NULL
+           THEN 1 ELSE 0
+         END AS is_in_use_now
       FROM rooms r
       LEFT JOIN seats s ON s.room_id = r.id
-      ORDER BY r.id ASC, s.id ASC
-      "
+      LEFT JOIN (
+      SELECT DISTINCT seat_id
+      FROM reservations
+      WHERE reservation_date = CURDATE()
+        AND UPPER(status) = 'CONFIRMED'
+        AND start_time <= CURTIME()
+        AND end_time > CURTIME()
+      ) AS active_res ON active_res.seat_id = s.id
+      ORDER BY r.id ASC, s.id ASC"
     );
 
     return $stms->fetchAll(PDO::FETCH_ASSOC);

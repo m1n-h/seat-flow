@@ -110,10 +110,20 @@ $roomSeatRows = $roomSeatRows ?? [];
             <div class="row g-3">
               <?php foreach ($roomSeatRows as $row) :
                 if (empty($row['seat_id'])) continue;
-                $seatStatus = strtoupper((string)$row['seat_status'] ?? 'AVAILABLE');
-                $isUnavailable = in_array($seatStatus, ['MAINTENANCE', 'UNAVAILABLE', 'DISABLED'], true);
-                $badgeClass = $isDisabled ? 'bg-secondary' : 'bg-success';
-                $badgeText = $isUnavailable ? '이용 불가' : '예약 가능';
+                $seatStatus = strtolower(trim((string)($row['seat_status'] ?? '')));
+                $isMaintenance = ($seatStatus !== 'active');
+                $isInUseNow = !$isMaintenance && ((int)($row['is_in_use_now'] ?? 0) === 1);
+
+                if ($isMaintenance) {
+                  $badgeClass = 'bg-secondary';
+                  $badgeText = '점검 중';
+                } elseif ($isInUseNow) {
+                  $badgeClass = 'bg-warning text-dark';
+                  $badgeText = '현재 이용 중';
+                } else {
+                  $badgeClass = 'bg-success';
+                  $badgeText = '이용 가능';
+                }
               ?>
                 <div class="col-md-6">
                   <div class="border rounded p-3 h-100 d-flex flex-column justify-content-between bg-white">

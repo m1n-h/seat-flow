@@ -30,10 +30,10 @@ class HomeController
     $roomWithSeats = [];
 
     try {
-      $roomWithSeats = $$this->seatRepository->findAllRoomsWithSeats();
+      $roomWithSeats = $this->seatRepository->findAllRoomsWithSeats();
     } catch (Throwable $e) {
       error_log('[Home Index Error] ' . $e->getMessage());
-      $errorMessage = $errorMessage ?? "룸 및 좌석 목록을 불러오는 중 오류가 발생했습니다.";
+      $errorMessage = $errorMessage ?? "룸 및 좌석 목록을 불러오는 중 오류가 발생했습니다. : " . $e->getMessage();
     }
 
     require __DIR__ . "/../Views/home.php";
