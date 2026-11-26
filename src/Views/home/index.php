@@ -17,9 +17,16 @@ $roomSeatRows = $roomSeatRows ?? [];
 <section class="w-100">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="h4 fw-bold mb-1">좌석 및 스터디룸 예약</h1>
+    <?php if ($currentUser !== null) : ?>
+      <button type="button" class="btn btn-sm btn-outline-primary" onclick="goMyReservation()">MY예약</button>
+    <?php endif; ?>
   </div>
-  <?php if ($currentUser !== null) : ?>
-    <a href="/?page=my_reservations" class="btn btn-outline-primary btn-sm">MY예약</a>
+
+  <?php if (!empty($errorMessage)) : ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <?= h((string)$errorMessage) ?>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="닫기"></button>
+    </div>
   <?php endif; ?>
 
   <?php if (!empty($successMessage)) : ?>
@@ -34,7 +41,7 @@ $roomSeatRows = $roomSeatRows ?? [];
       <div class="card shadow-sm">
         <div class="card-header bg-white fw-bold">예약하기</div>
         <div class="card-body">
-          <?php if ($currentUser !== null) : ?>
+          <?php if ($currentUser === null) : ?>
             <div class="alert alert-secondary small mb-3">
               로그인 후 예약 가능 합니다.
             </div>
@@ -45,7 +52,7 @@ $roomSeatRows = $roomSeatRows ?? [];
                 <label for="seat_id" class="form-label">룸/좌석</label>
                 <select id="seat_id" name="seat_id" class="form-select" required>
                   <option value="">선택</option>
-                  <?php foreach ($roomSeatRows as $row) :
+                  <?php foreach ($roomWithSeats as $row) :
                     if (empty($row['seat_id'])) continue;
                     $seatIdVal = (int)$row['seat_id'];
                     $seatStatus = strtoupper((string)$row['seat_status'] ?? '');
@@ -53,7 +60,7 @@ $roomSeatRows = $roomSeatRows ?? [];
                     $selected = ((string)$oldReservation['seat_id'] === (string)$seatIdVal) ? 'selected' : '';
                   ?>
                     <option value="<?= $seatIdVal ?>" <?= $selected ?> <?= $isDisabled ? 'disabled' : '' ?>>
-                      <?= h((string)$row['room_name']) . '-' . h((string)$row['seat_number']) ?>
+                      <?= h((string)$row['room_name']) . ' / ' . h((string)$row['seat_number']) ?>
                       <?= $isDisabled ? ' (이용불가)' : '' ?>
                     </option>
                   <?php endforeach; ?>
@@ -104,11 +111,11 @@ $roomSeatRows = $roomSeatRows ?? [];
       <div class="card shadow-sm">
         <div class="card-header bg-white fw-bold">룸 및 좌석 현황</div>
         <div class="card-body">
-          <?php if (empty($roomSeatRows)) : ?>
+          <?php if (empty($roomWithSeats)) : ?>
             <p class="text-muted mb-0">등록된 룸/좌석 정보가 없습니다.</p>
           <?php else : ?>
             <div class="row g-3">
-              <?php foreach ($roomSeatRows as $row) :
+              <?php foreach ($roomWithSeats as $row) :
                 if (empty($row['seat_id'])) continue;
                 $seatStatus = strtolower(trim((string)($row['seat_status'] ?? '')));
                 $isMaintenance = ($seatStatus !== 'active');
@@ -155,6 +162,10 @@ $roomSeatRows = $roomSeatRows ?? [];
 <script type="text/javascript">
   function goLogin() {
     location.href = '/?page=login';
+  }
+
+  function goMyReservation() {
+    location.href = '/?page=my_reservations';
   }
 </script>
 

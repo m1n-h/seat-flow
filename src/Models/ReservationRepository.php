@@ -43,19 +43,19 @@ class ReservationRepository
       $overlapStmt->execute([
         'seat_id' => $seatId,
         'reservation_date' => $reservationDate,
-        'status' => $activeStatus,
         'start_time' => $startTime,
         'end_time' => $endTime,
+        'status' => $activeStatus,
       ]);
 
       if ($overlapStmt->fetch(PDO::FETCH_ASSOC) !== false)
         throw new RuntimeException("선택한 날짜와 시간대에 이미 예약된 좌석입니다.");
 
       $insertStmt = $this->pdo->prepare(
-        "INSERT INTO resevations
+        "INSERT INTO reservations
         (user_id, seat_id, reservation_date, start_time, end_time, status, created_at)
         VALUES
-        (:user_id, :seat_id, :reservation_date, :start_time, :end_tiem, :status, NOW())
+        (:user_id, :seat_id, :reservation_date, :start_time, :end_time, :status, NOW())
         "
       );
 
@@ -63,9 +63,9 @@ class ReservationRepository
         'user_id' => $userId,
         'seat_id' => $seatId,
         'reservation_date' => $reservationDate,
-        'status' => $activeStatus,
         'start_time' => $startTime,
-        'end_time' => $endTime
+        'end_time' => $endTime,
+        'status' => $activeStatus
       ]);
 
       $newId = (int)$this->pdo->lastInsertId();
