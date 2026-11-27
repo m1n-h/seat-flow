@@ -1,4 +1,20 @@
+# 민감한 DB 및 환경 설정 파일
+config/database.php
 .env
+.env.*
+!.env.example
+
+# 의존성 및 빌드 산출물
+/vendor/
+/node_modules/
+
+# 로그 및 캐시 파일
 *.log
+/storage/logs/
+/cache/
+
+# OS 및 에디터 메타 파일
 .DS_Store
 Thumbs.db
+.idea/
+.vscode/
