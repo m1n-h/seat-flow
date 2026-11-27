@@ -2,7 +2,7 @@
 config/database.php
 .env
 .env.*
-!.env.example
+# !.env.example
 
 # 의존성 및 빌드 산출물
 /vendor/
